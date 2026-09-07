@@ -1,0 +1,1 @@
+[{"id":"miner-a","identity":{"did":"did:key:example"},"enabled":true,"capabilities":[{"modelId":"demo-model","modelHash":"sha256:demo","precisions":["fp16"],"decodePolicies":["greedy"],"assurance":"SOFT","observedAt":"2026-09-07T00:00:00Z"}],"telemetry":{"successEwma":0.9,"latencyMsEwma":120,"availability":0.98,"observedAt":"2026-09-07T00:00:00Z"}}]

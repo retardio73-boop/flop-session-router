@@ -1,0 +1,1 @@
+{"requestId":"demo-1","constraints":{"modelId":"demo-model","modelHash":"sha256:demo","precision":"fp16","decodePolicy":"greedy","minimumAssurance":"SOFT"},"preflight":false,"maxAttempts":2}
