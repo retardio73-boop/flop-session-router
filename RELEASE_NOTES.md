@@ -19,4 +19,10 @@ First public alpha of FLOP Session Router, a community-built and unofficial tool
 - Endpoint checks are defense-in-depth and do not provide complete DNS-rebinding protection without deployment egress controls.
 - npm publication is pending verified ownership of the `@flop-tools` scope.
 
-Tarball SHA-256 is published in the attached `SHA256SUMS` file.
+## Artifact
+
+`flop-tools-session-router-0.1.0.tgz`
+
+SHA-256: `14d9ec35b0a1189e6320302bcf6f77628d4546a44dee1e7e71108f2a15bbeebe`
+
+The same value is published in the attached `SHA256SUMS` file.
