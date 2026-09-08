@@ -18,7 +18,7 @@ This is an independent community tool. It is **not** the official FLOP router, a
 - Memory-only development signer and typed external signer boundary. Router core never owns production keys.
 - Local HTTP API and non-interactive CLI.
 
-The official FLOP runtime integration is not active. The adapter fails closed with `RUNTIME_UNAVAILABLE` until an authoritative supported runtime exists and is explicitly configured. The Yellow Paper is a target specification, not evidence that a public compute channel is available.
+FLOP compute-channel mechanics are reported as live internally, but no authoritative public FLOP runtime/API/SDK integration is available and configured for this Router. The adapter therefore fails closed with `PUBLIC_RUNTIME_UNAVAILABLE`. The Yellow Paper remains a target specification for this public adapter boundary.
 
 ## Install and run
 
@@ -49,7 +49,7 @@ The normal signing path is typed and domain-separated: parse, validate, canonica
 
 ## Extension boundary
 
-Implement `MinerCandidateProvider` to supply public or private candidate intelligence without changing Router core. Private reputation, treasury, wallet intelligence, strategy and monitoring feeds do not belong in this repository.
+Implement `MinerCandidateProvider` to supply public or private candidate intelligence without changing Router core. Capabilities, telemetry, prices and FailedAck observations may carry evidence provenance and coverage. Router consumes those facts; it does not own global reputation, productive keys, TCLK, treasury, wallet intelligence, strategy or monitoring.
 
 ## API
 
@@ -57,7 +57,7 @@ Implement `MinerCandidateProvider` to supply public or private candidate intelli
 
 ## Compatibility
 
-`protocol-compat.json` pins released and upstream sources. FLOP Yellow Paper `0.5.0-draft` is `TARGET_SPEC`, not evidence of a usable public runtime. TCLK is not reimplemented here.
+`protocol-compat.json` pins released and upstream sources. FLOP Yellow Paper `0.5.0-draft` is `TARGET_SPEC`; its internal implementation matrix is distinct from this repository's `PUBLIC_RUNTIME_UNAVAILABLE` adapter state. TCLK is not reimplemented here.
 
 ## Security
 
@@ -65,4 +65,4 @@ See `SECURITY.md`. The current SSRF checks cover loopback, private, link-local, 
 
 ## Maturity
 
-Release `v0.1.0-alpha` is an early public release intended for simulation, policy development, endpoint preflight, failure handling, route auditing, and local integrations. Live FLOP runtime execution and value settlement are unavailable.
+Release `v0.1.1-alpha` is an early public release intended for simulation, policy development, endpoint preflight, failure handling, route auditing, and local integrations. An authoritative public FLOP runtime adapter and value-settlement integration are unavailable here; this does not imply that FLOP's internal protocol mechanics do not exist.

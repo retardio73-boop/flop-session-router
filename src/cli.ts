@@ -16,8 +16,8 @@ async function main(){
  if(command==="inspect"){const d=repo.decision(args[1]??"");if(!d)throw new Error("DECISION_NOT_FOUND");return output(d);}
  if(command==="replay")return output(new SessionRouter(new StaticCandidateProvider([]),repo).replay(args[1]??""));
  if(command==="preflight"){const candidates=json(value("--candidates")??"");return output(await preflightMany(candidates,DEFAULT_CONFIG));}
- if(command==="doctor")return output({node:process.version,stdinRequired:false,database:db,runtimeAdapter:"RUNTIME_UNAVAILABLE",signer:"SIGNER_UNAVAILABLE",status:"READY_FOR_LOCAL_USE"});
- if(command==="serve"){const fixtures=value("--candidates");const provider=fixtures?new StaticCandidateProvider(json(fixtures)):new FlopRuntimeAdapter();const server=createRouterServer(new SessionRouter(provider,repo),repo);const host=value("--host")??"127.0.0.1",port=Number(value("--port")??8788);server.listen(port,host,()=>output({listening:`http://${host}:${port}`,runtime:fixtures?"FIXTURE_ONLY":"RUNTIME_UNAVAILABLE"}));return;}
+ if(command==="doctor")return output({node:process.version,stdinRequired:false,database:db,runtimeAdapter:"PUBLIC_RUNTIME_UNAVAILABLE",signer:"SIGNER_UNAVAILABLE",status:"READY_FOR_LOCAL_USE"});
+ if(command==="serve"){const fixtures=value("--candidates");const provider=fixtures?new StaticCandidateProvider(json(fixtures)):new FlopRuntimeAdapter();const server=createRouterServer(new SessionRouter(provider,repo),repo);const host=value("--host")??"127.0.0.1",port=Number(value("--port")??8788);server.listen(port,host,()=>output({listening:`http://${host}:${port}`,runtime:fixtures?"FIXTURE_ONLY":"PUBLIC_RUNTIME_UNAVAILABLE"}));return;}
  throw new Error("usage: flop-router <serve|route|inspect|replay|preflight|doctor>");
 }
 main().catch(e=>{process.stderr.write(JSON.stringify({error:e instanceof Error?e.message:"failed"})+"\n");process.exitCode=1;});

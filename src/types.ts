@@ -2,9 +2,11 @@ export type AssuranceTier = "SOFT" | "HARD" | "UNKNOWN";
 export type CircuitState = "CLOSED" | "OPEN" | "HALF_OPEN";
 export type OutcomeState = "selected" | "attempted" | "acknowledged" | "active" | "completed" | "failed" | "timed_out" | "cancelled" | "runtime_unavailable";
 
-export interface ModelCapability { modelId: string; modelHash?: string; precisions?: string[]; decodePolicies?: string[]; assurance: AssuranceTier; observedAt?: string; }
+export interface EvidenceProvenance { source: string; sourceVersion?: string; evidenceRef?: string; verificationState?: "ASSERTED" | "OBSERVED" | "CRYPTOGRAPHICALLY_VERIFIED" | "INDEPENDENTLY_VERIFIED" | "ECONOMICALLY_VERIFIED" | "INVALID" | "CONTRADICTORY" | "UNKNOWN"; coverage?: "COMPLETE" | "PARTIAL" | "TRUNCATED" | "RETENTION_GAP" | "UNKNOWN"; observedAt?: string; eventTime?: string; }
+
+export interface ModelCapability { modelId: string; modelHash?: string; precisions?: string[]; decodePolicies?: string[]; assurance: AssuranceTier; observedAt?: string; provenance?: EvidenceProvenance; }
 export interface MinerEndpoint { url: string; protocol: string; }
-export interface MinerCandidate { id: string; identity: { account?: string; did?: string }; endpoint?: MinerEndpoint; capabilities: ModelCapability[]; enabled: boolean; telemetry?: { successEwma?: number; latencyMsEwma?: number; availability?: number; observedAt?: string }; price?: { amount: string; asset: string; unit: string }; }
+export interface MinerCandidate { id: string; identity: { account?: string; did?: string }; endpoint?: MinerEndpoint; capabilities: ModelCapability[]; enabled: boolean; telemetry?: { successEwma?: number; latencyMsEwma?: number; availability?: number; observedAt?: string; provenance?: EvidenceProvenance }; price?: { amount: string; asset: string; unit: string; provenance?: EvidenceProvenance }; }
 export interface RouteConstraints { modelId: string; modelHash?: string; precision?: string; decodePolicy?: string; minimumAssurance?: AssuranceTier; maxLatencyMs?: number; maximumPrice?: { amount: string; asset: string; unit: string }; capabilityMaxAgeMs?: number; }
 export interface RouteRequest { requestId: string; constraints: RouteConstraints; preflight?: boolean; maxAttempts?: number; }
 export interface PreflightResult { minerId: string; status: "PASS" | "FAIL" | "SKIPPED"; latencyMs?: number; checkedAt: string; reason?: string; }
@@ -12,8 +14,8 @@ export interface ScoreBreakdown { success: number; latency: number; freshness: n
 export interface CandidateEvaluation { minerId: string; eligible: boolean; rejectionReasons: string[]; score?: ScoreBreakdown; preflight: PreflightResult; }
 export interface RouterConfig { weights: Omit<ScoreBreakdown, "total">; circuitFailureThreshold: number; circuitCooldownMs: number; failedAckHalfLifeMs: number; preflightTimeoutMs: number; preflightConcurrency: number; preflightMaxBytes: number; allowPrivateEndpoints: boolean; }
 export interface RouterSnapshot { request: RouteRequest; candidates: MinerCandidate[]; evaluations: CandidateEvaluation[]; config: RouterConfig; routerVersion: string; capturedAt: string; }
-export interface RouteDecision { decisionId: string; selectedMinerId?: string; status: "SELECTED" | "NO_ELIGIBLE_MINER" | "RUNTIME_UNAVAILABLE"; ranking: string[]; snapshot: RouterSnapshot; configHash: string; snapshotHash: string; }
-export interface FailedAckObservation { id: string; minerId: string; source: string; observedAt: string; channelRef?: string; block?: string; confidence?: string; finality?: string; }
+export interface RouteDecision { decisionId: string; selectedMinerId?: string; status: "SELECTED" | "NO_ELIGIBLE_MINER" | "PUBLIC_RUNTIME_UNAVAILABLE"; ranking: string[]; snapshot: RouterSnapshot; configHash: string; snapshotHash: string; }
+export interface FailedAckObservation { id: string; minerId: string; source: string; observedAt: string; channelRef?: string; block?: string; confidence?: string; finality?: string; evidence?: EvidenceProvenance; }
 export interface SessionAttempt { id: string; decisionId: string; minerId: string; attempt: number; startedAt: string; completedAt?: string; outcome: OutcomeState; retryable?: boolean; reason?: string; }
 export interface SessionOutcome { decisionId: string; status: OutcomeState; attempts: SessionAttempt[]; selectedMinerId?: string; }
 
