@@ -26,7 +26,7 @@ if(-not$Exists){gh repo create "$Owner/$RepoName" --public --description $Descri
 if(-not$Origin){git remote add origin $Expected}
 gh repo edit "$Owner/$RepoName" --description $Description --add-topic flop --add-topic ai-agents --add-topic inference --add-topic routing --add-topic protocol
 git push -u origin main
-$ExistingTag=(git rev-parse -q --verify "refs/tags/$Tag" 2>$null)
+$ExistingTag=(git rev-parse -q --verify "refs/tags/$Tag^{}" 2>$null)
 if($ExistingTag-and($ExistingTag-ne(git rev-parse HEAD))){throw "$Tag exists at a different commit."}
 if(-not$ExistingTag){git tag -a $Tag -m 'FLOP Session Router v0.1.0-alpha'}
 git push origin $Tag
