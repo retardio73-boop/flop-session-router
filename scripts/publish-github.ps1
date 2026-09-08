@@ -2,6 +2,7 @@ param([Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9_.-]+$')][string]
 $ErrorActionPreference='Stop'
 $RepoName='flop-session-router'
 $Tag='v0.1.0-alpha'
+$ExpectedHash='14d9ec35b0a1189e6320302bcf6f77628d4546a44dee1e7e71108f2a15bbeebe'
 $Description='Deterministic off-chain miner routing, preflight, failover and auditable decisions for FLOP compute-session tooling.'
 $Expected="https://github.com/$Owner/$RepoName.git"
 if(-not(Get-Command gh -ErrorAction SilentlyContinue)){throw 'DESKTOP_INTERACTIVE_AUTH_REQUIRED: GitHub CLI is not installed.'}
@@ -15,6 +16,7 @@ New-Item -ItemType Directory -Force -Path release|Out-Null
 npm pack --pack-destination release|Out-Null
 $Tarball=(Get-ChildItem -LiteralPath release -Filter 'flop-tools-session-router-0.1.0.tgz' -File).FullName
 $Hash=(Get-FileHash -LiteralPath $Tarball -Algorithm SHA256).Hash.ToLowerInvariant()
+if($Hash-ne$ExpectedHash){throw "Generated tarball hash $Hash does not match audited release hash $ExpectedHash."}
 Set-Content -LiteralPath release\SHA256SUMS -Encoding ascii -Value "$Hash  $([IO.Path]::GetFileName($Tarball))"
 $TempDb=Join-Path ([IO.Path]::GetTempPath()) "flop-router-release-$PID.db"
 try{node dist\src\cli.js route --request examples\request.json --candidates examples\candidates.json --db $TempDb|Set-Content -LiteralPath release\example-decision.json -Encoding utf8}finally{Get-ChildItem -LiteralPath ([IO.Path]::GetDirectoryName($TempDb)) -Filter "$([IO.Path]::GetFileName($TempDb))*" -File -ErrorAction SilentlyContinue|Remove-Item -Force}
