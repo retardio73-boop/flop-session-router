@@ -1,7 +1,7 @@
 {
   "name": "@flop-tools/session-router",
   "version": "0.1.0",
-  "description": "Deterministic off-chain miner selection, preflight, failover and decision replay for FLOP compute sessions.",
+  "description": "Deterministic off-chain miner selection, preflight, failover and auditable decision routing for FLOP compute-session tooling.",
   "type": "module",
   "bin": { "flop-router": "dist/src/cli.js" },
   "exports": { ".": "./dist/src/index.js" },
@@ -12,7 +12,8 @@
     "test": "npm run build && node --test dist/test/*.test.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "pack:check": "npm pack --dry-run",
-    "check": "npm run typecheck && npm test && npm run pack:check"
+    "package:smoke": "npm run build && node tools/package-smoke.js",
+    "check": "npm run typecheck && npm test && npm run pack:check && npm run package:smoke"
   },
   "keywords": ["flop", "routing", "inference", "miner", "failover", "replay"],
   "license": "Apache-2.0",

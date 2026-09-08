@@ -1,1 +1,22 @@
-[{"id":"miner-a","identity":{"did":"did:key:example"},"enabled":true,"capabilities":[{"modelId":"demo-model","modelHash":"sha256:demo","precisions":["fp16"],"decodePolicies":["greedy"],"assurance":"SOFT","observedAt":"2026-09-07T00:00:00Z"}],"telemetry":{"successEwma":0.9,"latencyMsEwma":120,"availability":0.98,"observedAt":"2026-09-07T00:00:00Z"}}]
+[
+  {
+    "id": "miner-alpha",
+    "identity": {"did": "did:key:fixture-alpha"},
+    "enabled": true,
+    "capabilities": [{"modelId": "demo-model", "modelHash": "sha256:demo", "precisions": ["fp16"], "decodePolicies": ["greedy"], "assurance": "HARD", "observedAt": "2026-09-07T00:00:00Z"}],
+    "telemetry": {"successEwma": 0.96, "latencyMsEwma": 90, "availability": 0.99, "observedAt": "2026-09-07T00:00:00Z"}
+  },
+  {
+    "id": "miner-beta",
+    "identity": {"did": "did:key:fixture-beta"},
+    "enabled": true,
+    "capabilities": [{"modelId": "demo-model", "modelHash": "sha256:demo", "precisions": ["fp16"], "decodePolicies": ["greedy"], "assurance": "SOFT", "observedAt": "2026-09-07T00:00:00Z"}],
+    "telemetry": {"successEwma": 0.82, "latencyMsEwma": 180, "availability": 0.91, "observedAt": "2026-09-07T00:00:00Z"}
+  },
+  {
+    "id": "miner-rejected",
+    "identity": {"did": "did:key:fixture-rejected"},
+    "enabled": true,
+    "capabilities": [{"modelId": "different-model", "assurance": "SOFT"}]
+  }
+]

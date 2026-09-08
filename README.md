@@ -1,22 +1,24 @@
 # FLOP Session Router
 
-Deterministic off-chain miner selection, preflight, failover and decision replay for FLOP compute sessions.
+Deterministic off-chain miner selection, preflight, failover and auditable decision routing for FLOP compute-session tooling.
 
-This is an independent community tool. It is **not** the official FLOP router, a validator, miner, settlement protocol, blockchain replacement, or proof that live FLOP settlement is available.
+> **Alpha community project. Not an official FLOP Labs product.**
 
-## What works
+This is an independent community tool. It is **not** the official FLOP router, a validator, miner, settlement protocol, blockchain replacement, endorsement, or proof that live FLOP settlement is available. It currently supports local routing simulation and integration development. No fake miners, sessions, balances, or settlement results are presented as live network data.
+
+## What works today
 
 - Typed candidate/request/evaluation/decision/outcome models.
 - Hard compatibility gates before ranking.
 - Deterministic, explainable scoring and stable ID tie-breaking.
 - SSRF-aware bounded endpoint preflight.
-- SQLite migrations and durable decisions, FailedAck observations, attempts and circuit state.
+- SQLite migrations and durable decisions, FailedAck observations, attempts, session outcomes, preflight observations and circuit state.
 - Bounded failover and `CLOSED`/`OPEN` recovery state.
-- Byte-reproducible decision replay with configuration and snapshot hashes.
+- Stored-evaluation replay with configuration and snapshot hashes; full algorithmic recomputation is a known alpha limitation.
 - Memory-only development signer and typed external signer boundary. Router core never owns production keys.
 - Local HTTP API and non-interactive CLI.
 
-The FLOP runtime adapter currently fails closed with `RUNTIME_UNAVAILABLE`. The Yellow Paper is a target specification and its implementation-status matrix is authoritative about what is live.
+The official FLOP runtime integration is not active. The adapter fails closed with `RUNTIME_UNAVAILABLE` until an authoritative supported runtime exists and is explicitly configured. The Yellow Paper is a target specification, not evidence that a public compute channel is available.
 
 ## Install and run
 
@@ -24,22 +26,26 @@ The FLOP runtime adapter currently fails closed with `RUNTIME_UNAVAILABLE`. The 
 npm ci
 npm run check
 npm run build
+npm test
 node dist/src/cli.js route --request examples/request.json --candidates examples/candidates.json --db demo.db
 node dist/src/cli.js replay DECISION_ID --db demo.db
+node dist/src/cli.js inspect DECISION_ID --db demo.db
 node dist/src/cli.js serve --candidates examples/candidates.json --host 127.0.0.1 --port 8788
 ```
 
-No command prompts for a passphrase or login. `serve` binds to loopback in examples; expose it only behind your own authenticated gateway.
+The fixture contains three candidates: one hard-rejected, one eligible fallback, and one deterministic winner. The route command stores the decision in `demo.db`; use the returned decision ID with `replay` or `inspect`.
+
+No command prompts for a passphrase or login. `serve` binds to loopback by default; expose it only behind your own authenticated gateway.
 
 ## Routing invariants
 
-Eligibility precedes score. Missing observations are unknown/neutral, never perfect. Scores are rounded to six decimal places and ties resolve by miner ID. Preflight has a deadline, bounded response size, no redirects, DNS/private-address rejection by default, and bounded candidate concurrency at the integration boundary.
+Eligibility precedes score. Missing observations are unknown/neutral, never perfect. An advertised `maxLatencyMs` is a hard constraint: missing latency data or an observation above the limit rejects the candidate. Scores are rounded to six decimal places and ties resolve by miner ID. Preflight has a deadline, bounded response size, no redirects, DNS/private-address rejection by default, and bounded candidate concurrency. Completion order never affects ranking.
 
-`replay` uses the stored candidate snapshot and score breakdown. It never mutates the historical decision; mismatch returns `DECISION_REPLAY_DIVERGENCE`.
+`replay` verifies the persisted configuration hash and deterministically replays the stored eligibility/score evaluation. It never mutates history; mismatch returns `DECISION_REPLAY_DIVERGENCE`. **Alpha limitation:** it does not yet re-run the current scoring implementation from raw telemetry, so this is stored-evaluation replay rather than full algorithmic recomputation.
 
 ## Signers
 
-The normal signing path is typed and domain-separated: parse, validate, canonicalize, re-encode, apply policy, then call `Signer`. `EphemeralSigner` is memory-only and test-only. `ExternalSigner` keeps custody outside Router. `SecretInjectedSigner` is explicit opt-in, memory-only, and accepts PKCS#8 DER from a deployment secret provider; the CLI does not expose it.
+The normal signing path is typed and domain-separated: parse, validate, canonicalize, re-encode, apply policy, then call `Signer`. `EphemeralSigner` is memory-only and test-only. `ExternalSigner` keeps custody outside Router and fails closed on timeout, redirects, oversized bodies, unsafe endpoints, invalid schemas or a mismatched payload hash. Private/local signer endpoints require explicit opt-in. `SecretInjectedSigner` is explicit opt-in, memory-only, and accepts PKCS#8 DER from a deployment secret provider; the CLI does not expose it.
 
 ## Extension boundary
 
@@ -47,7 +53,7 @@ Implement `MinerCandidateProvider` to supply public or private candidate intelli
 
 ## API
 
-`GET /healthz`, `GET /readyz`, `POST /v1/route`, `GET /v1/decisions/:id`, `GET /v1/miners`, and `GET /metrics`. See `openapi.json`.
+`GET /healthz`, `GET /readyz`, `POST /v1/route`, `GET /v1/decisions/:id`, `GET /v1/miners`, `GET /v1/miners/:id`, and `GET /metrics`. Miner views are snapshots from the configured provider; they are not a global FLOP miner registry. See `openapi.json`.
 
 ## Compatibility
 
@@ -55,4 +61,8 @@ Implement `MinerCandidateProvider` to supply public or private candidate intelli
 
 ## Security
 
-See `SECURITY.md`. Never route funded production traffic through fixture providers or ephemeral signers.
+See `SECURITY.md`. The current SSRF checks cover loopback, private, link-local, reserved and IPv4-mapped IPv6 addresses, but remain defense-in-depth rather than complete DNS-rebinding protection. Never route funded production traffic through fixture providers or ephemeral signers.
+
+## Maturity
+
+Release `v0.1.0-alpha` is an early public release intended for simulation, policy development, endpoint preflight, failure handling, route auditing, and local integrations. Live FLOP runtime execution and value settlement are unavailable.
