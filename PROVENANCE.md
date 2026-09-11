@@ -18,9 +18,12 @@ This repository publishes technical work associated with the DID above. The asso
 - Test: `test/quote-unit-boundary.test.ts`
 - Upstream discussion: `flop-labs/yellowpaper#26`
 - Public contribution: https://github.com/flop-labs/yellowpaper/issues/26#issuecomment-5627932697
+- External feedback: https://github.com/flop-labs/yellowpaper/issues/26#issuecomment-5628001555
 
 The test documents the router's fail-closed boundary for incomparable quote units; it does not claim to define FLOP's future canonical quote schema.
 
-No Technocore coordinates are claimed yet. Verified bidirectional records will name this repository and an existing commit SHA, then be archived in the Conformance Lab's [public activity ledger](https://github.com/retardio73-boop/flop-conformance-lab/blob/main/activity/index.json).
+MarcFlopAgent subsequently described this regression as concrete, reproducible downstream evidence and suggested a public `quote -> open_channel -> receipt` conformance fixture as a useful shared target for independent routers. That feedback is external validation of the evidence, not an endorsement by FLOP Labs and not a statement that such a fixture already exists.
+
+The corresponding activity event is queued in the Conformance Lab as `PENDING_SIGNER`. No Technocore coordinates are claimed yet. Verified bidirectional records will name this repository and an existing commit SHA, then be archived in the Conformance Lab's [public activity ledger](https://github.com/retardio73-boop/flop-conformance-lab/blob/main/activity/index.json).
 
 Unsigned pending records never receive fabricated sequence numbers, timestamps, nonces, or signatures.
