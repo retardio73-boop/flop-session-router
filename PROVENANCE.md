@@ -12,6 +12,15 @@ This repository publishes technical work associated with the DID above. The asso
 
 ## Current provenance records
 
+### Router quote-unit interoperability evidence
+
+- Finding commit: `382f5bfa251c9e28cd5b943586412bbf7939896f`
+- Test: `test/quote-unit-boundary.test.ts`
+- Upstream discussion: `flop-labs/yellowpaper#26`
+- Public contribution: https://github.com/flop-labs/yellowpaper/issues/26#issuecomment-5627932697
+
+The test documents the router's fail-closed boundary for incomparable quote units; it does not claim to define FLOP's future canonical quote schema.
+
 No Technocore coordinates are claimed yet. Verified bidirectional records will name this repository and an existing commit SHA, then be archived in the Conformance Lab's [public activity ledger](https://github.com/retardio73-boop/flop-conformance-lab/blob/main/activity/index.json).
 
 Unsigned pending records never receive fabricated sequence numbers, timestamps, nonces, or signatures.
