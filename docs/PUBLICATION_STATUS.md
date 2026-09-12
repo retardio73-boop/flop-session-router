@@ -8,9 +8,9 @@ This file distinguishes repository/package state, Git tag state, and GitHub Rele
 - `main` passes the full local check suite, including Windows package smoke.
 - Public tag `v0.1.2-alpha` exists on the tested release commit.
 - Local release artifact `flop-tools-session-router-0.1.2.tgz` and `SHA256SUMS` were generated from that tested tree.
-- A GitHub Release entry with attached assets is still pending.
+- GitHub Release `v0.1.2-alpha` is published as a prerelease with `flop-tools-session-router-0.1.2.tgz` and `SHA256SUMS` attached.
 
-Therefore `v0.1.2-alpha` is a **tagged repository/package release candidate pending GitHub Release asset publication**. Do not describe it as a downloadable GitHub Release until the release entry and matching assets are present.
+Therefore `v0.1.2-alpha` is a **published GitHub prerelease with downloadable, checksummed assets**.
 
 ## Publication acceptance gate
 
