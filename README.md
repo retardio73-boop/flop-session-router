@@ -41,6 +41,8 @@ No command prompts for a passphrase or login. `serve` binds to loopback by defau
 
 Eligibility precedes score. Missing observations are unknown/neutral, never perfect. An advertised `maxLatencyMs` is a hard constraint: missing latency data or an observation above the limit rejects the candidate. Scores are rounded to six decimal places and ties resolve by miner ID. Preflight has a deadline, bounded response size, no redirects, DNS/private-address rejection by default, and bounded candidate concurrency. Completion order never affects ranking.
 
+Quotes are only comparable when their asset/unit semantics match the request boundary. A numerically cheaper quote in an incompatible unit is rejected rather than ranked or converted locally. This remains fail-closed until FLOP publishes a canonical/versioned quote-discovery contract or stable equivalent interface.
+
 `replay` verifies the persisted configuration hash and deterministically replays the stored eligibility/score evaluation. It never mutates history; mismatch returns `DECISION_REPLAY_DIVERGENCE`. **Alpha limitation:** it does not yet re-run the current scoring implementation from raw telemetry, so this is stored-evaluation replay rather than full algorithmic recomputation.
 
 ## Signers
@@ -65,4 +67,4 @@ See `SECURITY.md`. The current SSRF checks cover loopback, private, link-local, 
 
 ## Maturity
 
-Release `v0.1.1-alpha` is an early public release intended for simulation, policy development, endpoint preflight, failure handling, route auditing, and local integrations. An authoritative public FLOP runtime adapter and value-settlement integration are unavailable here; this does not imply that FLOP's internal protocol mechanics do not exist.
+Release `v0.1.2-alpha` adds an upstream-facing regression for the quote-unit comparability boundary raised around FLOP Yellow Paper #26. The Router remains intended for simulation, policy development, endpoint preflight, failure handling, route auditing and local integrations. An authoritative public FLOP runtime adapter and value-settlement integration are unavailable here; this does not imply that FLOP's internal protocol mechanics do not exist.
