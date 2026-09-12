@@ -1,6 +1,6 @@
-# v0.1.0-alpha
+# v0.1.2-alpha
 
-First public alpha of FLOP Session Router, a community-built and unofficial tool for deterministic off-chain candidate routing, endpoint preflight, bounded failover and auditable decisions.
+Focused interoperability release for FLOP Session Router.
 
 ## Included
 
@@ -9,20 +9,18 @@ First public alpha of FLOP Session Router, a community-built and unofficial tool
 - Bounded concurrent preflight, bounded retries and persistent circuit state.
 - Persistent decisions, attempts, outcomes, FailedAck and preflight observations.
 - Hardened external-signer boundary and provider-scoped HTTP API.
-- Offline three-candidate fixture and clean-package smoke test.
+- Regression coverage for incompatible quote units: a cheaper-looking `per-token` quote is rejected rather than numerically compared against a `reserved-session` maximum.
+
+## Why this matters
+
+The Router now has a concrete downstream test for the quote-contract ambiguity discussed in FLOP Yellow Paper issue #26. It preserves each published unit/profile boundary and fails closed rather than inventing a local conversion between unlike pricing semantics.
 
 ## Alpha limitations
 
-- The official FLOP runtime integration is unavailable and fails closed.
+- The authoritative public FLOP runtime integration remains unavailable and fails closed as `PUBLIC_RUNTIME_UNAVAILABLE`.
+- No canonical/versioned pre-session quote/discovery contract is claimed by this release.
 - No live sessions or value settlement are claimed.
 - Replay validates stored evaluations and hashes; it does not recompute raw telemetry with the current algorithm.
-- Endpoint checks are defense-in-depth and do not provide complete DNS-rebinding protection without deployment egress controls.
-- npm publication is pending verified ownership of the `@flop-tools` scope.
+- Endpoint checks remain defense-in-depth and do not provide complete DNS-rebinding protection without deployment egress controls.
 
-## Artifact
-
-`flop-tools-session-router-0.1.0.tgz`
-
-SHA-256: `14d9ec35b0a1189e6320302bcf6f77628d4546a44dee1e7e71108f2a15bbeebe`
-
-The same value is published in the attached `SHA256SUMS` file.
+Artifacts and SHA-256 checksums should be generated from the exact tagged commit at release time; no checksum is predeclared here before packaging.
