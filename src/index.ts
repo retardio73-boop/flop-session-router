@@ -3,6 +3,7 @@ export * from "./providers.js";
 export * from "./preflight.js";
 export * from "./router.js";
 export * from "./signer.js";
+export * from "./secure-signer.js";
 export * from "./storage.js";
 export * from "./canonical.js";
 export * from "./observability.js";
