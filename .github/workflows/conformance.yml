@@ -1,0 +1,54 @@
+name: cross-system conformance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Router
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Build Router
+        run: |
+          npm ci
+          npm run build
+
+      - name: Checkout pinned Conformance Lab
+        uses: actions/checkout@v4
+        with:
+          repository: retardio73-boop/flop-conformance-lab
+          ref: 77544aaeeffc2371e0cff83580a69fa2d5971521
+          path: conformance-lab
+
+      - name: Build Conformance Lab
+        working-directory: conformance-lab
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify Router as reference implementation
+        run: |
+          node conformance-lab/dist/src/cli.js run \
+            --router-module "$GITHUB_WORKSPACE/dist/src/index.js" \
+            --out router-conformance-report.json
+
+      - name: Retain conformance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: router-conformance-report
+          path: router-conformance-report.json
+          if-no-files-found: error
