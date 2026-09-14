@@ -15,7 +15,7 @@ This is an independent community tool. It is **not** the official FLOP router, a
 - SQLite migrations and durable decisions, FailedAck observations, attempts, session outcomes, preflight observations and circuit state.
 - Bounded failover and `CLOSED`/`OPEN` recovery state.
 - Stored-evaluation replay with configuration and snapshot hashes; full algorithmic recomputation is a known alpha limitation.
-- Memory-only development signer and typed external signer boundary. Router core never owns production keys.
+- Memory-only development signer, typed external signer boundary, and a reusable identity-pinned `SecureSignerBoundary` for production adapters. Router core never owns production keys.
 - Local HTTP API and non-interactive CLI.
 
 FLOP compute-channel mechanics are reported as live internally, but no authoritative public FLOP runtime/API/SDK integration is available and configured for this Router. The adapter therefore fails closed with `PUBLIC_RUNTIME_UNAVAILABLE`. The Yellow Paper remains a target specification for this public adapter boundary.
@@ -48,6 +48,8 @@ Quotes are only comparable when their asset/unit semantics match the request bou
 ## Signers
 
 The normal signing path is typed and domain-separated: parse, validate, canonicalize, re-encode, apply policy, then call `Signer`. `EphemeralSigner` is memory-only and test-only. `ExternalSigner` keeps custody outside Router and fails closed on timeout, redirects, oversized bodies, unsafe endpoints, invalid schemas or a mismatched payload hash. Private/local signer endpoints require explicit opt-in. `SecretInjectedSigner` is explicit opt-in, memory-only, and accepts PKCS#8 DER from a deployment secret provider; the CLI does not expose it.
+
+`SecureSignerBoundary` can wrap any `Signer` to pin one expected identity, enforce an explicit domain/kind allowlist, reject identity drift, and expose fail-closed health without introducing fallback keys. Custody-specific mechanisms such as Windows CurrentUser/DPAPI, TPM/HSM, OS keyrings or remote signers stay outside Router core. See `docs/SECURE_SIGNER_BOUNDARY.md`.
 
 ## Extension boundary
 
