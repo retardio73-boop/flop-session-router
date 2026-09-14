@@ -74,3 +74,10 @@ Release `v0.1.2-alpha` adds an upstream-facing regression for the quote-unit com
 For local multi-repository observability, use [FLOP Control Center](https://github.com/retardio73-boop/flop-control-center). It provides repository health, bounded logs, GitHub/network status, checks, and reversible allowlisted controls without taking signer custody or performing protocol writes.
 
 Try the read-only synthetic demo with `python server_public.py --demo`. The current adoption-oriented release is [v0.2.0-alpha](https://github.com/retardio73-boop/flop-control-center/releases/tag/v0.2.0-alpha).
+
+## Works with
+
+- [FLOP Conformance Lab](https://github.com/retardio73-boop/flop-conformance-lab) — portable external evidence for routing and cross-system boundaries.
+- [FLOP Control Center](https://github.com/retardio73-boop/flop-control-center) — local operational visibility and reversible controls.
+
+Automated agents can start at [`AGENTS.md`](AGENTS.md), [`SKILL.md`](SKILL.md), or [`llms.txt`](llms.txt).
