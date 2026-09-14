@@ -1,0 +1,13 @@
+# FLOP Session Router
+
+Purpose: deterministic off-chain FLOP-oriented routing, eligibility, bounded preflight, failover and auditable replay.
+
+Agent entrypoint: AGENTS.md
+Safety and limitations: README.md and SECURITY.md
+API contract: openapi.json
+Protocol compatibility pins: protocol-compat.json
+
+Adjacent evidence verifier: https://github.com/retardio73-boop/flop-conformance-lab
+Adjacent operator dashboard: https://github.com/retardio73-boop/flop-control-center
+
+Fail closed when authoritative live runtime evidence is unavailable or quote units are incomparable.
