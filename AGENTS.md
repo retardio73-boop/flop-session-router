@@ -1,6 +1,6 @@
 # Agent entrypoint
 
-Use this repository for deterministic off-chain candidate eligibility, ranking, preflight, failover and auditable routing decisions.
+Use this repository for deterministic off-chain candidate eligibility, ranking, preflight, failover, replay and auditable routing decisions.
 
 ## Default rules
 1. Eligibility gates run before scoring.
