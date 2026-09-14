@@ -68,3 +68,9 @@ See `SECURITY.md`. The current SSRF checks cover loopback, private, link-local, 
 ## Maturity
 
 Release `v0.1.2-alpha` adds an upstream-facing regression for the quote-unit comparability boundary raised around FLOP Yellow Paper #26. The Router remains intended for simulation, policy development, endpoint preflight, failure handling, route auditing and local integrations. An authoritative public FLOP runtime adapter and value-settlement integration are unavailable here; this does not imply that FLOP's internal protocol mechanics do not exist.
+
+## Operator tooling
+
+For local multi-repository observability, use [FLOP Control Center](https://github.com/retardio73-boop/flop-control-center). It provides repository health, bounded logs, GitHub/network status, checks, and reversible allowlisted controls without taking signer custody or performing protocol writes.
+
+Try the read-only synthetic demo with `python server_public.py --demo`. The current adoption-oriented release is [v0.2.0-alpha](https://github.com/retardio73-boop/flop-control-center/releases/tag/v0.2.0-alpha).
