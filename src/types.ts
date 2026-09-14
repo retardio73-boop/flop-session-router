@@ -6,8 +6,50 @@ export interface EvidenceProvenance { source: string; sourceVersion?: string; ev
 
 export interface ModelCapability { modelId: string; modelHash?: string; precisions?: string[]; decodePolicies?: string[]; assurance: AssuranceTier; observedAt?: string; provenance?: EvidenceProvenance; }
 export interface MinerEndpoint { url: string; protocol: string; }
-export interface MinerCandidate { id: string; identity: { account?: string; did?: string }; endpoint?: MinerEndpoint; capabilities: ModelCapability[]; enabled: boolean; telemetry?: { successEwma?: number; latencyMsEwma?: number; availability?: number; observedAt?: string; provenance?: EvidenceProvenance }; price?: { amount: string; asset: string; unit: string; provenance?: EvidenceProvenance }; }
-export interface RouteConstraints { modelId: string; modelHash?: string; precision?: string; decodePolicy?: string; minimumAssurance?: AssuranceTier; maxLatencyMs?: number; maximumPrice?: { amount: string; asset: string; unit: string }; capabilityMaxAgeMs?: number; }
+
+/**
+ * Opaque identity for the assumptions that make two prices economically comparable.
+ * Routers only compare prices when asset, unit and comparisonProfile all match exactly.
+ * The profile does not invent a FLOP quote schema; it is supplied by the authoritative
+ * discovery/quote source and stays fail-closed when absent.
+ */
+export interface PriceQuote { amount: string; asset: string; unit: string; comparisonProfile?: string; provenance?: EvidenceProvenance; }
+export interface PriceConstraint { amount: string; asset: string; unit: string; comparisonProfile?: string; }
+
+/**
+ * Local metadata projection of the canonical opening-offer boundary described by FLOP.
+ * This type is deliberately separate from PriceQuote and is not a wire encoder/signer.
+ * In particular minEscrow is a floor, capacityHint is advisory, and neither is used as
+ * a substitute for an accepted payment or a reproducible comparison quote.
+ */
+export interface OpeningOfferMetadata {
+  kind: "StandingOffer" | "SessionOffer";
+  version: 1 | 2;
+  miner?: string;
+  chainGenesis?: string;
+  modelHash?: string;
+  precision?: string;
+  enclaveKey?: string;
+  minEscrow?: { amount: string; asset: string; unit: string };
+  slaBounds?: Record<string, unknown>;
+  capacityHint?: unknown;
+  expiresAt?: string;
+  nonce?: string;
+  signature?: string;
+  forwardTerms?: Record<string, unknown>;
+  acceptance?: {
+    agent?: string;
+    measuredRoot?: string;
+    decodePolicyHash?: string;
+    receiptKey?: string;
+    actualEscrow?: { amount: string; asset: string; unit: string };
+    settlementClass?: string;
+  };
+  provenance?: EvidenceProvenance;
+}
+
+export interface MinerCandidate { id: string; identity: { account?: string; did?: string }; endpoint?: MinerEndpoint; capabilities: ModelCapability[]; enabled: boolean; telemetry?: { successEwma?: number; latencyMsEwma?: number; availability?: number; observedAt?: string; provenance?: EvidenceProvenance }; price?: PriceQuote; openingOffer?: OpeningOfferMetadata; }
+export interface RouteConstraints { modelId: string; modelHash?: string; precision?: string; decodePolicy?: string; minimumAssurance?: AssuranceTier; maxLatencyMs?: number; maximumPrice?: PriceConstraint; capabilityMaxAgeMs?: number; }
 export interface RouteRequest { requestId: string; constraints: RouteConstraints; preflight?: boolean; maxAttempts?: number; }
 export interface PreflightResult { minerId: string; status: "PASS" | "FAIL" | "SKIPPED"; latencyMs?: number; checkedAt: string; reason?: string; }
 export interface ScoreBreakdown { success: number; latency: number; freshness: number; preflight: number; assurance: number; availability: number; failedAckPenalty: number; circuitPenalty: number; total: number; }
