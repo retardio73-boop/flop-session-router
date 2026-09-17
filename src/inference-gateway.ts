@@ -62,7 +62,8 @@ export class InferenceGateway {
         const ttftMs = (firstAt ?? ended) - started;
         const latencyMs = ended - started;
         const outputTokensEstimate = tokenEstimate(text);
-        const tokensPerSecond = outputTokensEstimate / Math.max(latencyMs / 1000, 0.001);
+        const decodeMs = ended - (firstAt ?? started);
+        const tokensPerSecond = outputTokensEstimate / Math.max(decodeMs / 1000, 0.001);
         metrics.ttftMsEwma = ewma(metrics.ttftMsEwma, ttftMs);
         metrics.latencyMsEwma = ewma(metrics.latencyMsEwma, latencyMs);
         metrics.tokensPerSecondEwma = ewma(metrics.tokensPerSecondEwma, tokensPerSecond);
@@ -143,6 +144,7 @@ export interface OllamaWorkerOptions {
   baseUrl?: string;
   models: string[];
   timeoutMs?: number;
+  keepAlive?: string | number;
 }
 
 export class OllamaWorker implements InferenceWorker {
@@ -150,11 +152,13 @@ export class OllamaWorker implements InferenceWorker {
   readonly models: string[];
   private readonly baseUrl: string;
   private readonly timeoutMs: number;
+  private readonly keepAlive: string | number;
   constructor(options: OllamaWorkerOptions) {
     this.id = options.id;
     this.models = options.models;
     this.baseUrl = (options.baseUrl ?? "http://127.0.0.1:11434").replace(/\/$/, "");
     this.timeoutMs = options.timeoutMs ?? 120_000;
+    this.keepAlive = options.keepAlive ?? "2m";
   }
 
   async health(): Promise<WorkerHealth> {
@@ -171,7 +175,7 @@ export class OllamaWorker implements InferenceWorker {
       method: "POST",
       headers: { "content-type": "application/json" },
       signal: AbortSignal.timeout(this.timeoutMs),
-      body: JSON.stringify({ model: request.model, messages: request.messages, options: { temperature: request.temperature }, stream: true })
+      body: JSON.stringify({ model: request.model, messages: request.messages, keep_alive: this.keepAlive, options: { temperature: request.temperature, num_predict: request.maxTokens }, stream: true })
     });
     if (!response.ok || !response.body) throw new Error(`OLLAMA_HTTP_${response.status}`);
     const reader = response.body.getReader();

@@ -10,3 +10,6 @@ export * from "./tclk-provisional.js";
 
 export * from "./external-discovery-provider.js";
 export * from "./inference-gateway.js";
+export * from "./inference-resource.js";
+export * from "./inference-runtime.js";
+export * from "./inference-server.js";
