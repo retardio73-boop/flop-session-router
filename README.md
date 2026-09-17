@@ -20,6 +20,23 @@ This is an independent community tool. It is **not** the official FLOP router, a
 
 FLOP compute-channel mechanics are reported as live internally, but no authoritative public FLOP runtime/API/SDK integration is available and configured for this Router. The adapter therefore fails closed with `PUBLIC_RUNTIME_UNAVAILABLE`. The Yellow Paper remains a target specification for this public adapter boundary.
 
+## Experimental local inference gateway
+
+The repository also includes an **experimental, single-machine inference-serving boundary** for real local LLM requests. It is independent of FLOP settlement and does not imply a live FLOP compute runtime.
+
+With Ollama, the gateway currently supports model-aware routing, health checks, bounded failover, queueing, TTFT/latency/decode-rate metrics, conservative GPU admission controls, and an OpenAI-style chat-completions endpoint. The Windows helper defaults to one concurrent GPU request, loopback binding, idle model release, and BelowNormal process priority.
+
+Quick local path:
+
+```powershell
+npm run inference:smoke
+npm run inference:serve
+# optional manual load test
+npm run inference:bench
+```
+
+See [docs/inference-gateway.md](docs/inference-gateway.md) for configuration and current limits. **Not implemented:** vLLM/SGLang serving, continuous batching, scheduler-owned KV cache/PagedAttention, exact tokenizer accounting, multi-GPU/distributed model parallelism, or a production authentication layer. Keep the service on loopback unless you add an authenticated reverse proxy and appropriate network controls.
+
 ## Install and run
 
 ```powershell
