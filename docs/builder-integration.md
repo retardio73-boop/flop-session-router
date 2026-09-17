@@ -41,6 +41,8 @@ Useful exchange:
 
 Use the independent Conformance Lab to verify exported evidence rather than coupling conformance policy into Router core.
 
+`buildRouterJourneyEvidence()` exports a versioned `flop.router-journey-evidence.v1` envelope containing the discovery digest, preserved quote metadata, deterministic ranking, config/snapshot hashes, replay status, and optional execution outcome. It intentionally does not claim that discovery evidence is a canonical FLOP quote or that a route decision proves settlement.
+
 A high-value collaboration is a small public adapter plus a deterministic fixture and CI test. It should be possible for either project to reproduce the boundary without access to secrets or a funded runtime.
 
 ## Upstream contribution rule
