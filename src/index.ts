@@ -9,3 +9,4 @@ export * from "./observability.js";
 export * from "./tclk-provisional.js";
 
 export * from "./external-discovery-provider.js";
+export * from "./inference-gateway.js";

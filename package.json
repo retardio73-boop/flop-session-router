@@ -5,7 +5,7 @@
   "type": "module",
   "bin": { "flop-router": "dist/src/cli.js" },
   "exports": { ".": "./dist/src/index.js" },
-  "files": ["dist/src", "README.md", "START_HERE.md", "docs/builder-integration.md", "examples", "LICENSE", "SECURITY.md", "protocol-compat.json", "openapi.json"],
+  "files": ["dist/src", "README.md", "START_HERE.md", "docs/builder-integration.md", "docs/inference-gateway.md", "examples", "LICENSE", "SECURITY.md", "protocol-compat.json", "openapi.json"],
   "engines": { "node": ">=22.13" },
   "scripts": {
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
@@ -14,6 +14,7 @@
     "pack:check": "npm pack --dry-run",
     "package:smoke": "npm run build && node tools/package-smoke.js",
     "quickstart": "npm run build && node dist/src/cli.js route --request examples/request.json --candidates examples/candidates.json --db quickstart.db",
+    "inference:smoke": "npm run build && node tools/inference-smoke.js",
     "check": "npm run typecheck && npm test && npm run pack:check && npm run package:smoke"
   },
   "keywords": ["flop", "routing", "inference", "miner", "failover", "replay", "technocore", "ai-agents", "interop"],
