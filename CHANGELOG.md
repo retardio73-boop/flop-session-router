@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3-alpha - 2026-09-17
+
+- Add an experimental single-machine local inference gateway independent of FLOP settlement.
+- Add Ollama and OpenAI-compatible worker boundaries with model-aware routing, health checks and bounded failover.
+- Add queueing, conservative single-GPU concurrency, TTFT/latency/decode-rate metrics and NVIDIA resource snapshots.
+- Add configurable GPU/VRAM/temperature admission guards, idle model release and BelowNormal/headless Windows helpers.
+- Add OpenAI-style local endpoints, manual benchmark tooling and inference-runtime tests.
+- Document the current boundary: no vLLM/SGLang, continuous batching, scheduler-owned KV cache/PagedAttention, exact tokenizer accounting, multi-GPU serving or production authentication yet.
+
 ## 0.1.2-alpha - 2026-09-11
 
 - Add a regression proving that numerically smaller quotes in incompatible units are rejected instead of ranked against a requested session-price unit.

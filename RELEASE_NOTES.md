@@ -1,26 +1,40 @@
-# v0.1.2-alpha
+# v0.1.3-alpha
 
-Focused interoperability release for FLOP Session Router.
+Experimental local inference-infrastructure release for FLOP Session Router.
 
 ## Included
 
-- Hard compatibility, assurance, freshness, price and latency gates before scoring.
-- Deterministic scoring and miner-ID tie breaking.
-- Bounded concurrent preflight, bounded retries and persistent circuit state.
-- Persistent decisions, attempts, outcomes, FailedAck and preflight observations.
-- Hardened external-signer boundary and provider-scoped HTTP API.
-- Regression coverage for incompatible quote units: a cheaper-looking `per-token` quote is rejected rather than numerically compared against a `reserved-session` maximum.
+- Local inference gateway for real LLM requests, independent of FLOP settlement.
+- Ollama worker plus an OpenAI-compatible worker boundary.
+- Model-aware routing, worker health checks and bounded failover.
+- Queueing with conservative single-GPU concurrency by default.
+- TTFT, end-to-end latency and decode-rate EWMA metrics.
+- NVIDIA GPU utilization, VRAM, temperature and power snapshots.
+- Admission pause on configurable GPU, VRAM or temperature thresholds.
+- OpenAI-style `POST /v1/chat/completions`, `GET /v1/models`, `/metrics` and `/resource` endpoints.
+- Windows BelowNormal priority, headless start/stop helpers and Ollama idle model release.
+- Manual concurrent benchmark tooling and inference-specific runtime tests.
 
-## Why this matters
+## Reproducible local smoke
 
-The Router now has a concrete downstream test for the quote-contract ambiguity discussed in FLOP Yellow Paper issue #26. It preserves each published unit/profile boundary and fails closed rather than inventing a local conversion between unlike pricing semantics.
+```powershell
+npm ci
+npm run check
+npm run inference:smoke
+npm run inference:serve
+```
+
+With Ollama available on `127.0.0.1:11434`, the smoke path routes an actual local request through the gateway and reports TTFT, total latency and decode-rate metrics.
 
 ## Alpha limitations
 
-- The authoritative public FLOP runtime integration remains unavailable and fails closed as `PUBLIC_RUNTIME_UNAVAILABLE`.
-- No canonical/versioned pre-session quote/discovery contract is claimed by this release.
-- No live sessions or value settlement are claimed.
-- Replay validates stored evaluations and hashes; it does not recompute raw telemetry with the current algorithm.
-- Endpoint checks remain defense-in-depth and do not provide complete DNS-rebinding protection without deployment egress controls.
+- Single-machine serving only; no multi-GPU or distributed model parallelism.
+- Local backend is Ollama; vLLM and SGLang are not integrated yet.
+- No continuous batching or scheduler-owned KV cache / PagedAttention implementation.
+- Gateway token counts are estimates rather than tokenizer-exact accounting.
+- Client-facing SSE streaming is not yet exposed by the gateway API.
+- No production authentication layer; loopback binding is the safe default.
+- GPU admission controls are resource protections, not security boundaries.
+- FLOP settlement/runtime integration remains separate and still fails closed when unavailable.
 
-Artifacts and SHA-256 checksums should be generated from the exact tagged commit at release time; no checksum is predeclared here before packaging.
+Release artifacts and SHA-256 checksums are generated from the exact tagged commit.
