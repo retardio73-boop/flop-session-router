@@ -1,9 +1,6 @@
 name: verify OpenAgentSearch provider
 
 on:
-  push:
-    branches:
-      - verify-openagentsearch-provider
   workflow_dispatch:
 
 permissions:
