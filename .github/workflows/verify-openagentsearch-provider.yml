@@ -1,0 +1,60 @@
+name: verify OpenAgentSearch provider
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout router
+        uses: actions/checkout@v4
+
+      - name: Checkout OpenAgentSearch integration
+        uses: actions/checkout@v4
+        with:
+          repository: djd39448/openagentsearch
+          ref: b0b05e76d086eb4c1f9d2a2502afc16802d12804
+          path: external/openagentsearch
+          persist-credentials: false
+
+      - name: Verify OpenAgentSearch pin
+        run: |
+          test "$(git -C external/openagentsearch rev-parse HEAD)" = "b0b05e76d086eb4c1f9d2a2502afc16802d12804"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Reproduce downstream journey exactly
+        working-directory: external/openagentsearch
+        run: bash integrations/flop-session-router/journey/reproduce.sh
+
+      - name: Summarize evidence
+        working-directory: external/openagentsearch
+        run: |
+          node - <<'NODE'
+          const fs = require("fs");
+          const p = "integrations/flop-session-router/journey/out/journey.json";
+          const j = JSON.parse(fs.readFileSync(p, "utf8"));
+          if (!j.ok) process.exit(1);
+          console.log(JSON.stringify({
+            ok: j.ok,
+            router: j.router,
+            provider: j.provider,
+            checks: j.checks.map(c => ({step:c.step, ok:c.ok}))
+          }, null, 2));
+          NODE
+
+      - name: Upload reproduced journey
+        uses: actions/upload-artifact@v4
+        with:
+          name: openagentsearch-session-router-reproduction
+          path: external/openagentsearch/integrations/flop-session-router/journey/out/
+          retention-days: 90
+          if-no-files-found: error
