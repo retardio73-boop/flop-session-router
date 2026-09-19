@@ -96,5 +96,6 @@ Try the read-only synthetic demo with `python server_public.py --demo`. The curr
 
 - [FLOP Conformance Lab](https://github.com/retardio73-boop/flop-conformance-lab) — portable external evidence for routing and cross-system boundaries.
 - [FLOP Control Center](https://github.com/retardio73-boop/flop-control-center) — local operational visibility and reversible controls.
+- [OpenAgentSearch](https://github.com/djd39448/openagentsearch/tree/b0b05e76d086eb4c1f9d2a2502afc16802d12804/integrations/flop-session-router) — externally maintained `MinerCandidateProvider`, independently reproduced by this repository against Router `dba6525554c4ea5965ef6dd23e93194736aa0ef3`. The adapter stays downstream; see [docs/builder-integration.md](docs/builder-integration.md).
 
 Automated agents can start at [`AGENTS.md`](AGENTS.md), [`SKILL.md`](SKILL.md), or [`llms.txt`](llms.txt).
