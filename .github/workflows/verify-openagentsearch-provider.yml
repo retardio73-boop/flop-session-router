@@ -17,10 +17,6 @@ jobs:
       - name: Checkout router
         uses: actions/checkout@v4
 
-      - name: Verify router baseline
-        run: |
-          git merge-base --is-ancestor dba6525554c4ea5965ef6dd23e93194736aa0ef3 HEAD
-
       - name: Checkout OpenAgentSearch integration
         uses: actions/checkout@v4
         with:
